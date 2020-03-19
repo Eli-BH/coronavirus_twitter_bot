@@ -1,13 +1,8 @@
 import praw
 import tweepy
-import time
-import tkinter
-import pandas as pd
-import datetime as dt
-import time
-from bs4 import BeautifulSoup as bs
-import csv 
 
+
+#enter your information from the reddit dev dashboard
 client_id = -
 client_secret = -
 user_agent = -
@@ -22,29 +17,18 @@ reddit = praw.Reddit(
     password = -
     )
 
-
+# choose your subreddit
 subred = reddit.subreddit("coronavirus")
 
-hot = subred.hot(limit=10)
-new = subred.new(limit=2)
-controv = subred.controversial(limit=10)
-top = subred.top(limit=10)
-gilded = subred.top(limit=10)
-
-x = next(new)
-posts = {
-    'title':[],
-    'url':[],
-    'author':[],
-    'created':[]
-}
 
 
+#enter your consumer tokens here from the twitter dev dashboard
 consumer_key = -
 consumer_secret = -
 access_token = -
 access_token_secret = -
 
+#oath info
 auth = tweepy.OAuthHandler(
     consumer_key,
     consumer_secret,
@@ -57,8 +41,9 @@ auth.set_access_token(
 api = tweepy.API(auth)
 user = api.me()
 
-
 def new_tweet():
+    """function that takes a stream from a subreddit api praw
+    and posts it with the tweepy api"""
     while True:
         try:
             for submission in reddit.subreddit('coronavirus').stream.submissions():
