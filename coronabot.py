@@ -6,7 +6,8 @@ from bs4 import BeautifulSoup as bs
 import csv
 
 
-with open('api_info.csv') as api_info: 
+
+with open('api_info.csv') as api_info:
     reader = csv.reader(api_info)
     api_data = dict(reader)
 
@@ -21,7 +22,7 @@ reddit = praw.Reddit(
     client_id = client_id,
     client_secret = client_secret,
     user_agent = user_agent,
-    username = username, 
+    username = username,
     password = password
     )
 
@@ -76,37 +77,45 @@ mask = '\U0001F637'
 def new_tweet():
     """function that takes a stream from a subreddit api praw
     and posts it with the tweepy api"""
+    schd = 1
     while True:
         try:
-            for submission in reddit.subreddit('coronavirus').stream.submissions():
-                #updates twitter status with the title of the post and url in the post
-                #credit the poster with submission.author
-                api.update_status(
-                    str(submission.title) + '\n' + 
-                    str(submission.url) + '\n'+
-                    'reddit user:'+
-                    str(submission.author) +'\n\n' +
-                    "Wash your hands." + '\n'+
-                    "repost to spread awareness"+"\n"+
-                    "#covid-19 #covid19 #coronavirus #stayhome"
-                )
-
+            if schd < 5: 
+                for submission in reddit.subreddit('coronavirus').stream.submissions():
+                    #updates twitter status with the title of the post and url in the post
+                    #credit the poster with submission.author
+                    api.update_status(
+                        str(submission.title) + '\n' +
+                        str(submission.url) + '\n'+
+                        'reddit user:'+
+                        str(submission.author) +'\n\n' +
+                        "Wash your hands." + '\n'+
+                        "repost to spread awareness"+"\n"+
+                        "#corona #covid19 #coronavirus #stayhome"
+                    )
+                    print("tweeeted article")
+                    time.sleep(900)
+                schd += 1
+            
+            elif schd == 5: 
                 api.update_status(
                     world+mask + "Total confirmed cases: " + tot_confirmed + '\n'+
                     world+heart+ "Total recovered cases: " + tot_recovered + '\n'+
                     world+skull+ "Total deaths: " + tot_deaths + '\n\n'+
                     usa+mask+ "US confirmed cases: " + us_confirmed +'\n'+
-                    usa+heart+ "US Recovered cases: " + us_recoverd + '\n'+ 
+                    usa+heart+ "US Recovered cases: " + us_recoverd + '\n'+
                     usa+skull+ "US deaths: "+ us_deaths + '\n'+
-                    "#covid-19 #covid19 #coronavirus #stayhome"
+                    "#corina #covid19 #coronavirus #stayhome"
                 )
-                
-                #tweet message to make sure that it is running 
-                print('tweeted')
-                time.sleep(300) #select the time between posts in seconds
+                #tweet message to make sure that it is running
+                print('tweeted stats')
+                time.sleep(900)
+                schd = 1
+
+            
         except tweepy.TweepError as e:
             print(e.reason)
         except StopIteration:
             pass
-     
+
 new_tweet()
