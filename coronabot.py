@@ -86,9 +86,9 @@ def new_tweet():
                     str(submission.url) + '\n'+
                     'reddit user:'+
                     str(submission.author) +'\n\n' +
-                    "Please practice social distancing, and wash your hands." + '\n'+
+                    "Wash your hands." + '\n'+
                     "repost to spread awareness"+"\n"+
-                    "#corona #covid19 #coronavirus #stayhome"
+                    "#covid-19 #covid19 #coronavirus #stayhome"
                 )
 
                 api.update_status(
@@ -98,8 +98,7 @@ def new_tweet():
                     usa+mask+ "US confirmed cases: " + us_confirmed +'\n'+
                     usa+heart+ "US Recovered cases: " + us_recoverd + '\n'+ 
                     usa+skull+ "US deaths: "+ us_deaths + '\n'+
-                    '\n\n'+
-                    "#corona #covid19 #coronavirus #stayhome"
+                    "#covid-19 #covid19 #coronavirus #stayhome"
                 )
                 
                 #tweet message to make sure that it is running 
