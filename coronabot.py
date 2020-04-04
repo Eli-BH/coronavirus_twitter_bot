@@ -70,6 +70,16 @@ heart = '\U0001F493'
 skull = '\U0001F480'
 mask = '\U0001F637'
 
+def stats():
+    api.update_status(
+    world+mask + "Confirmed cases: " + tot_confirmed + '\n'+
+    world+heart+ "Recovered cases: " + tot_recovered + '\n'+
+    world+skull+ "Deaths: " + tot_deaths + '\n\n'+
+    usa+mask+ "US confirmed cases: " + us_confirmed +'\n'+
+    usa+heart+ "US Recovered cases: " + us_recoverd + '\n'+
+    usa+skull+ "US deaths: "+ us_deaths
+    )
+    print("tweeted stats")
 
 
 
@@ -80,7 +90,7 @@ def new_tweet():
     schd = 1
     while True:
         try:
-            if schd < 5: 
+            if schd < 10:
                 for submission in reddit.subreddit('coronavirus').stream.submissions():
                     #updates twitter status with the title of the post and url in the post
                     #credit the poster with submission.author
@@ -93,29 +103,22 @@ def new_tweet():
                         "repost to spread awareness"+"\n"+
                         "#corona #covid19 #coronavirus #stayhome"
                     )
-                    print("tweeeted article")
-                    time.sleep(900)
-                schd += 1
-            
-            elif schd == 5: 
-                api.update_status(
-                    world+mask + "Total confirmed cases: " + tot_confirmed + '\n'+
-                    world+heart+ "Total recovered cases: " + tot_recovered + '\n'+
-                    world+skull+ "Total deaths: " + tot_deaths + '\n\n'+
-                    usa+mask+ "US confirmed cases: " + us_confirmed +'\n'+
-                    usa+heart+ "US Recovered cases: " + us_recoverd + '\n'+
-                    usa+skull+ "US deaths: "+ us_deaths + '\n'+
-                    "#corina #covid19 #coronavirus #stayhome"
-                )
-                #tweet message to make sure that it is running
-                print('tweeted stats')
-                time.sleep(900)
+                    print("tweeeted article" + str(schd))
+                    schd += 1
+                    time.sleep(600)
+                   
+            elif schd == 10 :
+                stats()
+                time.sleep(600)
                 schd = 1
 
-            
+
         except tweepy.TweepError as e:
             print(e.reason)
+            pass
+            print(schd)
         except StopIteration:
             pass
+        
 
 new_tweet()
