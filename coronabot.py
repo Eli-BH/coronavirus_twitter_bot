@@ -3,7 +3,7 @@ import tweepy
 import time
 import requests
 from bs4 import BeautifulSoup as bs
-import csv
+
 
 
 
@@ -48,77 +48,32 @@ auth.set_access_token(
 api = tweepy.API(auth)
 user = api.me()
 
-#tracker info
-URL = 'https://www.google.com/covid19-map/'
-page = requests.get(URL)
-
-soup = bs(page.content, 'lxml')
-
-tot_confirmed = soup.find_all('td', {"class": "uMsnNd HAChlc"})[0].text
-tot_recovered = soup.find_all('td', {"class": "uMsnNd HAChlc"})[2].text
-tot_deaths = soup.find_all('td', {"class": "uMsnNd HAChlc"})[3].text
-
-us_confirmed = soup.find_all('td', {"class": "uMsnNd HAChlc"})[4].text
-us_recoverd = soup.find_all('td', {"class": "uMsnNd HAChlc"})[6].text
-us_deaths = soup.find_all('td', {"class": "uMsnNd HAChlc"})[7].text
-
-#emoji list
-am = '\U0001F691'
-world = '\U0001F30E'
-usa = '\U0001F1FA\U0001F1F8'
-heart = '\U0001F493'
-skull = '\U0001F480'
-mask = '\U0001F637'
-
-def stats():
-    api.update_status(
-    world+mask + "Confirmed cases: " + tot_confirmed + '\n'+
-    world+heart+ "Recovered cases: " + tot_recovered + '\n'+
-    world+skull+ "Deaths: " + tot_deaths + '\n\n'+
-    usa+mask+ "US confirmed cases: " + us_confirmed +'\n'+
-    usa+heart+ "US Recovered cases: " + us_recoverd + '\n'+
-    usa+skull+ "US deaths: "+ us_deaths
-    )
-    print("tweeted stats")
-
-
-
 
 def new_tweet():
     """function that takes a stream from a subreddit api praw
     and posts it with the tweepy api"""
-    schd = 1
     while True:
         try:
-            if schd < 10:
-                for submission in reddit.subreddit('coronavirus').stream.submissions():
+            for submission in reddit.subreddit('coronavirus').stream.submissions():
                     #updates twitter status with the title of the post and url in the post
                     #credit the poster with submission.author
                     api.update_status(
                         str(submission.title) + '\n' +
                         str(submission.url) + '\n'+
-                        'reddit user:'+
-                        str(submission.author) +'\n\n' +
-                        "Wash your hands." + '\n'+
-                        "repost to spread awareness"+"\n"+
-                        "#corona #covid19 #coronavirus #stayhome"
+                        "report misinformation to @eli_b_goode by DM"+"\n"+
+                        "#covid19 #stayhome"
                     )
-                    print("tweeeted article" + str(schd))
-                    schd += 1
+                    print("article posted")
                     time.sleep(600)
-                   
-            elif schd == 10 :
-                stats()
-                time.sleep(600)
-                schd = 1
+
 
 
         except tweepy.TweepError as e:
             print(e.reason)
-            pass
-            print(schd)
+            time.sleep(30)
+
         except StopIteration:
             pass
-        
+
 
 new_tweet()
